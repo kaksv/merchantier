@@ -121,6 +121,8 @@ The workflow automates market settlement through two main triggers:
      --private-key $PRIVATE_KEY \
      --constructor-args 0x15fc6ae953e024d975e77382eeec56a9101f9f88
    ```
+   I deployed a sample smart contract on the sepolia testnet: `This is the contract Address ``` 0x3c6538D54F0ab3624DE662aEbb3b1B810928e354
+   ```
 
 5. **Configure workflow:**
    - Update `my-workflow/config.staging.json` with your deployed contract address
@@ -163,17 +165,27 @@ curl -X POST http://workflow-endpoint/create-market \
     "creator": "0x..."
   }'
 ```
+Here is a transaction sample transaction hash created by me while creating my own market. Make sure you create the market in your `prediction-market` directory using the following commands: ``` cd prediction-market
+cre workflow simulate my-workflow --broadcast
+```
+a sample hash i created is `0x9649e5cbc98cf935cc8be0f07f5c1970a51e6a7ca80bb3200463ea5369ffba89`
+ You can also verify that the market is created using this command: ``` cast call $MARKET_ADDRESS \
+  "getMarket(uint256) returns ((address,uint48,uint48,bool,uint16,uint8,uint256,uint256,string))" \
+  0 \
+  --rpc-url "https://ethereum-sepolia-rpc.publicnode.com"
+  ```
 
 ### Making a Prediction
 
-```javascript
-// Using web3.js or ethers.js
-const prediction = await marketContract.predict(
-  marketId,
-  Prediction.Yes,  // or Prediction.No
-  { value: ethers.utils.parseEther("1") }
-);
+```foundry
+//using cast
+cast send $MARKET_ADDRESS \
+  "predict(uint256,uint8)" 0 0 \
+  --value 0.01ether \
+  --rpc-url "https://ethereum-sepolia-rpc.publicnode.com" \
+  --private-key $CRE_ETH_PRIVATE_KEY
 ```
+For my case this was the transaction hash of creating such a transaction: `0xc2c84ac4d954749839e7aba32c9593040be45da06ef043d52efda0a8af5b6d97`
 
 ### Requesting Settlement
 
@@ -182,6 +194,14 @@ const prediction = await marketContract.predict(
 await marketContract.requestSettlement(marketId);
 // This emits SettlementRequested event, triggering the log listener
 ```
+```foundry
+cast send $MARKET_ADDRESS \
+  "requestSettlement(uint256)" 0 \
+  --rpc-url "https://ethereum-sepolia-rpc.publicnode.com" \
+  --private-key $CRE_ETH_PRIVATE_KEY
+  ```
+
+For my market , I got this as the transaction hash: `0x6d3d0aa6ef9cfe9f712fb667acb57f4debf0ecea9bc4a2c45606e65ca5caa09d` after market settlement.
 
 ### Claiming Winnings
 
@@ -189,6 +209,13 @@ await marketContract.requestSettlement(marketId);
 // Winners claim their payouts
 const amount = await marketContract.claimWinnings(marketId);
 ```
+```foundry
+cast send $MARKET_ADDRESS \
+  "claim(uint256)" 0 \
+  --rpc-url "https://ethereum-sepolia-rpc.publicnode.com" \
+  --private-key $CRE_ETH_PRIVATE_KEY
+```
+
 
 ## 🤖 AI-Powered Settlement
 
@@ -277,4 +304,4 @@ For issues and questions:
 
 ---
 
-**Built with ❤️ using Chainlink CRE and Gemini AI**
+**Built with ❤️ from Kakooza using Chainlink CRE and Gemini AI**
