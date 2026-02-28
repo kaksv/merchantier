@@ -37,10 +37,10 @@ const initWorkflow = (config: Config) => {
   const eventHash = keccak256(toHex(SETTLEMENT_REQUESTED_SIGNATURE));
 
   return [
-    // Day 1: HTTP Trigger - Market Creation
+    // HTTP Trigger - Market Creation
     cre.handler(httpTrigger, onHttpTrigger),
     
-    // Day 2: Log Trigger - Event-Driven Settlement ← NEW!
+    // Log Trigger - Event-Driven Settlement ← NEW!
     cre.handler(
       evmClient.logTrigger({
         addresses: [config.evms[0].marketAddress],

@@ -12,6 +12,8 @@ This prediction market platform allows users to:
 
 The platform uses Chainlink's CRE infrastructure to trigger AI analysis when markets request settlement, ensuring objective and decentralized decision-making without relying on centralized authorities.
 
+The platform is built and stress tested both on the tenderly virtual testnet and Ethereum sepolia test network.
+
 ## 🏗️ Architecture
 
 ### Smart Contracts (`/contracts/src`)
@@ -121,8 +123,17 @@ The workflow automates market settlement through two main triggers:
      --private-key $PRIVATE_KEY \
      --constructor-args 0x15fc6ae953e024d975e77382eeec56a9101f9f88
    ```
-   I deployed a sample smart contract on the sepolia testnet: `This is the contract Address ``` 0x3c6538D54F0ab3624DE662aEbb3b1B810928e354
-   ```
+
+   I deployed a sample smart contract on the sepolia testnet: `This is the contract Address
+    ``` 0x3c6538D54F0ab3624DE662aEbb3b1B810928e354 ```
+
+    You can also deploy on the tenderly virtual testnet which offers the flexibility of having access to unlimited test tokens for testing purposes.
+    Follow the instructions in the Contracts `Readme.md` to deploy to tenderly.
+    But these are is a sample smart contract you can interact with from the tenderly testnet that I deployed.
+    -   **Deployed Contract**: ``` 0x4E676f9c6aed012DB5c85f47B55b31ECce511B88 ```
+-   **Contract Hash**: ``` 0xcb47936ac2ff98858da8e095cead8ff7c2fea09c600b69cfb0c200e38069771c ```
+
+URL: `https://virtual.sepolia.eu.rpc.tenderly.co/22f8c2d3-abf5-4ec1-a737-e18d3a4757d0/address/0x4e676f9c6aed012db5c85f47b55b31ecce511b88`
 
 5. **Configure workflow:**
    - Update `my-workflow/config.staging.json` with your deployed contract address
@@ -165,9 +176,10 @@ curl -X POST http://workflow-endpoint/create-market \
     "creator": "0x..."
   }'
 ```
-Here is a transaction sample transaction hash created by me while creating my own market. Make sure you create the market in your `prediction-market` directory using the following commands: ``` cd prediction-market
-cre workflow simulate my-workflow --broadcast
-```
+Here is a transaction sample transaction hash created by me while creating my own market. Make sure you create the market in your `prediction-market` directory using the following commands:
+ `cd prediction-market`
+`cre workflow simulate my-workflow --broadcast`
+
 a sample hash i created is `0x9649e5cbc98cf935cc8be0f07f5c1970a51e6a7ca80bb3200463ea5369ffba89`
  You can also verify that the market is created using this command: ``` cast call $MARKET_ADDRESS \
   "getMarket(uint256) returns ((address,uint48,uint48,bool,uint16,uint8,uint256,uint256,string))" \
